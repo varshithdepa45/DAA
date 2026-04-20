@@ -1,51 +1,50 @@
 #include<stdio.h>
-#include<stdlib.h>
-int A[20][20],visited[20],stack[20];
-int n,i,j,k,s,top=-1,count=1;
-void DFS();
-void main()
+
+int cost[10][10], visited[10];
+int n;
+
+void dfs(int v);
+
+int main()
 {
-	printf("enter no.of nodes\n");
-	scanf("%d",&n);
-	printf("enter adjacency matrix\n");
-	for(i=1;i<=n;i++)
-		for(j=1;j<=n;j++)
-			scanf("%d",&A[i][j]);
-	for(i=1;i<=n;i++)
-		visited[i]=0;
-	printf("enter starting vertex");
-	scanf("%d",&s);
-	visited[s]=1;
-	printf("DFS=%d\t",s);
-	DFS();
-	if(count!=n){
-		printf("\nGraph is disconnected ");
-	}
-	else{
-		printf("\nGraph is connected");
-	}
+    int i, j, k, m, start;
+
+    scanf("%d", &n);
+    scanf("%d", &m);
+
+    for(i=1;i<=n;i++)
+        for(j=1;j<=n;j++)
+            cost[i][j] = 0;
+
+    for(i=1;i<=n;i++)
+        visited[i] = 0;
+
+    for(k=1;k<=m;k++)
+    {
+        scanf("%d %d", &i, &j);
+        cost[i][j] = 1;
+        cost[j][i] = 1;
+    }
+
+    scanf("%d", &start);
+
+    dfs(start);
+
+    return 0;
 }
-void DFS()
+
+void dfs(int v)
 {
-	stack[++top]=s;
-	k=1;
-	while(k<n)
-	{
-		for(i=1;i<=n;i++)
-		{
-			if(A[s][i]==1&&visited[i]==0)
-			{
-				stack[++top]=i;
-				s=i;
-				visited[i]=1;
-				printf("%d\t",s);
-				count ++;
-				break;
-			}
-		}
-		if(i>n)
-		s=stack[--top];
-		else
-			k++;
-	}
+    int i;
+
+    printf("%d ", v);
+    visited[v] = 1;
+
+    for(i=1;i<=n;i++)
+    {
+        if(cost[v][i] == 1 && visited[i] == 0)
+        {
+            dfs(i);
+        }
+    }
 }
