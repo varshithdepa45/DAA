@@ -1,55 +1,82 @@
 #include<stdio.h>
-#include<stdlib.h>
-void bfs();
-int cost[10][10],explored[10],visited[10];
-int queue[10],f=0,r=0;
-int i,j,k,n,v,m;
+
+// global variables
+int cost[10][10], visited[10];
+int queue[10], f = 0, r = 0;
+int n;
+
+// function declaration
+void bfs(int start);
+
 int main()
 {
-        printf("enter no.of vertices\n");
-        scanf("%d",&n);
-        printf("enter no of edges:\n");
-        scanf("%d",&m);
-        for(i=1;i<=n;i++)
-                for(j=1;j<=n;j++)
-                        cost[i][j]=0;
-        for(k=1;k<=m;k++)
-        {
-                visited[i]=0;
-                explored[i]=0;
-        }
-        printf("enter edges\n");
-	for(k=1;k<=m;k++)
-	{
-		scanf("%d%d",&i,&j);
-		cost[i][j]=cost[j][i]=1;
-	}
-	printf("initial vertex");
-	scanf("%d",&v);
-        printf("visited vertices\n");
-        printf("%d\n",v);
-        visited[v]=1;
-        bfs();
-        return 0;
+    int i, j, k, m, start;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &m);
+
+    // initialize adjacency matrix
+    for(i=1;i<=n;i++)
+        for(j=1;j<=n;j++)
+            cost[i][j] = 0;
+
+    // initialize visited array
+    for(i=1;i<=n;i++)
+        visited[i] = 0;
+
+    printf("Enter edges (u v):\n");
+
+    // input edges
+    for(k=1;k<=m;k++)
+    {
+        scanf("%d %d", &i, &j);
+
+        // undirected graph
+        cost[i][j] = 1;
+        cost[j][i] = 1;
+    }
+
+    printf("Enter starting vertex: ");
+    scanf("%d", &start);
+
+    printf("BFS Traversal:\n");
+
+    bfs(start);   // call BFS
+
+    return 0;
 }
-void bfs()
+
+// BFS function
+void bfs(int start)
 {
-        k=1;
-        while(k<n)
+    int i, v;
+
+    // insert starting node into queue
+    queue[r++] = start;
+
+    // mark as visited
+    visited[start] = 1;
+
+    // loop until queue is empty
+    while(f < r)
+    {
+        // remove from queue
+        v = queue[f++];
+
+        // print node
+        printf("%d ", v);
+
+        // check neighbors
+        for(i = 1; i <= n; i++)
         {
-                for(j=1;j<=n;j++)
-                {
-                        if(cost[v][j]!=0&&visited[j]!=1&&explored[j]!=1)
-                        {
-                                explored[j]=1;
-                                queue[r++]=j;
-                        }
-                }
-		v=queue[f++];
-                printf("%d",v);
-                k++;
-	        explored[v]=0;
-                visited[v]=1;
-                printf("\n");
-       }
+            if(cost[v][i] == 1 && visited[i] == 0)
+            {
+                queue[r++] = i;   // add to queue
+                visited[i] = 1;   // mark visited
+            }
+        }
+    }
 }
