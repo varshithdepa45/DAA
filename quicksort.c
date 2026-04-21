@@ -1,54 +1,80 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 
-int a[1000], n;
-
-void swap(int *x, int *y) {
-    int t = *x;
-    *x = *y;
-    *y = t;
-}
-
-int partition(int low, int high) {
-    int pivot = a[high];   // take last element as pivot
-    int i = low - 1;
-
-    for (int j = low; j < high; j++) {
-        if (a[j] <= pivot) {
-            i++;
-            swap(&a[i], &a[j]);
-        }
-    }
-
-    swap(&a[i + 1], &a[high]);
-    return i + 1;
-}
-
-void quicksort(int low, int high) {
-    if (low < high) {
-        int pi = partition(low, high);
-        quicksort(low, pi - 1);
-        quicksort(pi + 1, high);
-    }
-}
+void quicksort(int a[], int low, int high);
+int partition(int a[], int low, int high);
 
 int main() {
+    int a[100], n, i;
+    clock_t start, end;
+    double time_taken;
+
+    // Input
     printf("Enter number of elements: ");
     scanf("%d", &n);
 
-    srand(time(0));
+    printf("Enter elements:\n");
+    for(i = 0; i < n; i++)
+        scanf("%d", &a[i]);
 
-    for (int i = 0; i < n; i++) {
-        a[i] = rand() % n;
-    }
+    // Start time
+    start = clock();
 
-    quicksort(0, n - 1);
+    // Call quicksort
+    quicksort(a, 0, n - 1);
 
+    // End time
+    end = clock();
+
+    // Calculate time
+    time_taken = (double)(end - start) / CLOCKS_PER_SEC;
+
+    // Output sorted array
     printf("\nSorted array:\n");
-    for (int i = 0; i < n; i++) {
+    for(i = 0; i < n; i++)
         printf("%d ", a[i]);
-    }
+
+    // Print execution time
+    printf("\nExecution time = %f seconds", time_taken);
 
     return 0;
+}
+
+
+// Quick Sort
+void quicksort(int a[], int low, int high){
+    if(low < high){
+        int p = partition(a, low, high);
+
+        quicksort(a, low, p - 1);
+        quicksort(a, p + 1, high);
+    }
+}
+
+
+// Partition function
+int partition(int a[], int low, int high){
+    int pivot = a[low];
+    int i = low + 1;
+    int j = high;
+
+    while(i <= j){
+        while(a[i] <= pivot && i <= high)
+            i++;
+
+        while(a[j] > pivot)
+            j--;
+
+        if(i < j){
+            int temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
+        }
+    }
+
+    // Place pivot in correct position
+    a[low] = a[j];
+    a[j] = pivot;
+
+    return j;
 }
